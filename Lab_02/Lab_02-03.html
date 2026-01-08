@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Drag and Drop Task Manager</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        .column {
+            width: 30%;
+            min-height: 400px;
+            border: 2px solid #ccc;
+            padding: 10px;
+            background-color: #f9f9f9;
+        }
+        .column h2 {
+            text-align: center;
+            margin-top: 0;
+        }
+        .task {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin: 5px 0;
+            cursor: move;
+            border-radius: 4px;
+        }
+        .task.completed {
+            background-color: #d4edda;
+        }
+        #message {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #d1ecf1;
+            border: 1px solid #bee5eb;
+            border-radius: 4px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>Task Manager</h1>
+    <input type="text" id="taskInput" placeholder="Enter task name">
+    <button id="addTaskBtn">Add Task</button>
+    
+    <div class="container">
+        <div class="column" id="todo" ondrop="drop(event)" ondragover="allowDrop(event)">
+            <h2>To Do</h2>
+        </div>
+        <div class="column" id="inprogress" ondrop="drop(event)" ondragover="allowDrop(event)">
+            <h2>In Progress</h2>
+        </div>
+        <div class="column" id="completed" ondrop="drop(event)" ondragover="allowDrop(event)">
+            <h2>Completed</h2>
+        </div>
+    </div>
+    
+    <div id="message"></div>
+    
+    <script>
+        let draggedElement = null;
+        
+        document.getElementById('addTaskBtn').addEventListener('click', function() {
+            const taskName = document.getElementById('taskInput').value.trim();
+            if (taskName === '') return;
+            
+            const taskCard = document.createElement('div');
+            taskCard.className = 'task';
+            taskCard.draggable = true;
+            taskCard.ondragstart = drag;
+            
+            const currentDate = new Date().toLocaleDateString();
+            taskCard.innerHTML = `<strong>${taskName}</strong><br>${currentDate}`;
+            
+            document.getElementById('todo').appendChild(taskCard);
+            document.getElementById('taskInput').value = '';
+        });
+        
+        function allowDrop(ev) {
+            ev.preventDefault();
+        }
+        
+        function drag(ev) {
+            draggedElement = ev.target;
+        }
+        
+        function drop(ev) {
+            ev.preventDefault();
+            if (draggedElement) {
+                const targetColumn = ev.target.closest('.column');
+                if (targetColumn) {
+                    targetColumn.appendChild(draggedElement);
+                    
+                    if (targetColumn.id === 'completed') {
+                        draggedElement.classList.add('completed');
+                        showMessage('Task Completed Successfully');
+                    } else {
+                        draggedElement.classList.remove('completed');
+                    }
+                }
+            }
+            draggedElement = null;
+        }
+        
+        function showMessage(msg) {
+            const messageDiv = document.getElementById('message');
+            messageDiv.textContent = msg;
+            messageDiv.style.display = 'block';
+            setTimeout(() => {
+                messageDiv.style.display = 'none';
+            }, 3000);
+        }
+    </script>
+</body>
+</html></content>

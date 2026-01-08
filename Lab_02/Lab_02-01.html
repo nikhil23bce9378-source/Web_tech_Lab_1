@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTML5 Canvas Example</title>
+</head>
+<body>
+    <canvas id="myCanvas" width="500" height="300" style="border:1px solid #000;"></canvas>
+    
+    <script>
+        var canvas = document.getElementById('myCanvas');
+        var ctx = canvas.getContext('2d');
+     
+        ctx.fillStyle = 'blue';
+        ctx.fillRect(10, 10, 100, 50);
+        ctx.fillStyle = 'red';
+        ctx.beginPath();
+        ctx.arc(200, 50, 30, 0, 2 * Math.PI);
+        ctx.fill();
+        ctx.strokeStyle = 'green';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(10, 100);
+        ctx.lineTo(200, 100);
+        ctx.stroke();
+        ctx.fillStyle = 'black';
+        ctx.font = '30px Arial';
+        ctx.fillText('HTML5 Canvas', 250, 150);
+    </script>
+</body>
+</html>
