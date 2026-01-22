@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>User Activity Monitor</title>
+  <style>
+    body { font-family: Arial; }
+    #log {
+      border: 1px solid #ccc;
+      height: 250px;
+      overflow-y: auto;
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+    .warning {
+      color: red;
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<body>
+
+<h2>Real-Time User Activity Monitor</h2>
+
+<div id="warning"></div>
+
+<div id="log"></div>
+
+<button onclick="resetLog()">Reset</button>
+<button onclick="exportLog()">Export Log</button>
+
+<br><br>
+
+<input type="text" placeholder="Focus & type here">
+<button>Click Me</button>
+
+<script src="script.js"></script>
+</body>
+</html>

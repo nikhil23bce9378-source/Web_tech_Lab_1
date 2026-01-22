@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Multi-Step Form</title>
+  <style>
+    .stage { display: none; }
+    .active { display: block; }
+    .error { color: red; }
+    #progressBar {
+      width: 100%;
+      background: #eee;
+      height: 20px;
+      margin-bottom: 20px;
+    }
+    #progress {
+      height: 100%;
+      width: 0%;
+      background: green;
+    }
+  </style>
+</head>
+
+<body>
+
+<h2>Multi-Stage Form</h2>
+
+<div id="progressBar">
+  <div id="progress"></div>
+</div>
+
+<form id="multiForm">
+
+  <!-- Stage 1 -->
+  <div class="stage active">
+    <h3>Stage 1: Basic Info</h3>
+    <input id="name" placeholder="Name"><br>
+    <span class="error"></span><br>
+    <button type="button" onclick="nextStage()">Next</button>
+  </div>
+
+  <!-- Stage 2 -->
+  <div class="stage">
+    <h3>Stage 2: Contact</h3>
+    <input id="email" placeholder="Email"><br>
+    <input id="phone" placeholder="Phone"><br>
+    <span class="error"></span><br>
+    <button type="button" onclick="prevStage()">Back</button>
+    <button type="button" onclick="nextStage()">Next</button>
+  </div>
+
+  <!-- Stage 3 -->
+  <div class="stage">
+    <h3>Stage 3: Security</h3>
+    <input id="password" type="password" placeholder="Password"><br>
+    <span class="error"></span><br>
+    <button type="button" onclick="prevStage()">Back</button>
+    <button type="button" onclick="nextStage()">Next</button>
+  </div>
+
+  <!-- Stage 4 -->
+  <div class="stage">
+    <h3>Stage 4: Review</h3>
+    <p id="review"></p>
+    <button type="button" onclick="prevStage()">Back</button>
+    <button type="submit">Submit</button>
+  </div>
+
+</form>
+
+<script src="script.js"></script>
+</body>
+</html>
