@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Username Checker</title>
+<style>
+body { font-family: Arial; }
+input { padding: 8px; }
+#status { margin-top: 5px; font-weight: bold; }
+.loader { display:none; color: blue; }
+.error { color: red; }
+.success { color: green; }
+</style>
+</head>
+<body>
+
+<h2>Registration Form</h2>
+<form id="regForm">
+    Username: <input type="text" id="username" required>
+    <div class="loader" id="loading">Checking...</div>
+    <div id="status"></div>
+    <br><br>
+    <button type="submit">Register</button>
+</form>
+
+<script>
+let isAvailable = false;
+
+document.getElementById("username").addEventListener("input", function() {
+    const username = this.value.trim();
+    if(username.length === 0) return;
+
+    document.getElementById("loading").style.display = "block";
+
+    fetch("users.json")
+    .then(res => res.json())
+    .then(data => {
+        document.getElementById("loading").style.display = "none";
+
+        if(data.users.includes(username)){
+            document.getElementById("status").textContent = "Username already taken";
+            document.getElementById("status").className = "error";
+            isAvailable = false;
+        } else {
+            document.getElementById("status").textContent = "Username available";
+            document.getElementById("status").className = "success";
+            isAvailable = true;
+        }
+    })
+    .catch(() => {
+        document.getElementById("loading").textContent = "Error checking username";
+    });
+});
+
+document.getElementById("regForm").addEventListener("submit", function(e){
+    if(!isAvailable){
+        e.preventDefault();
+        alert("Username not available!");
+    }
+});
+</script>
+
+</body>
+</html>

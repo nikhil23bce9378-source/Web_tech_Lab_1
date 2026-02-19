@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Weather Dashboard</title>
+<style>
+.loader { display:none; color:blue; }
+</style>
+</head>
+<body>
+
+<h2>Weather Dashboard</h2>
+<input type="text" id="city" placeholder="Enter city">
+<button onclick="getWeather()">Search</button>
+
+<div class="loader" id="loading">Loading...</div>
+<div id="weather"></div>
+
+<script>
+let cache = {};
+
+function getWeather(){
+    const city = document.getElementById("city").value;
+    const apiKey = "1baa15ace4e66cb7c7822169d1f44554";
+    const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
+
+    if(cache[city]){
+        displayWeather(cache[city]);
+        return;
+    }
+
+    document.getElementById("loading").style.display = "block";
+
+    fetch(url)
+    .then(res => {
+        if(!res.ok) throw new Error("City not found");
+        return res.json();
+    })
+    .then(data => {
+        document.getElementById("loading").style.display = "none";
+        cache[city] = data;
+        displayWeather(data);
+    })
+    .catch(err => {
+        document.getElementById("loading").style.display = "none";
+        document.getElementById("weather").innerHTML = err.message;
+    });
+}
+
+function displayWeather(data){
+    document.getElementById("weather").innerHTML = `
+        <h3>${data.name}</h3>
+        <p>Temperature: ${data.main.temp}°C</p>
+        <p>Humidity: ${data.main.humidity}%</p>
+        <p>Condition: ${data.weather[0].description}</p>
+    `;
+}
+</script>
+
+</body>
+</html>
