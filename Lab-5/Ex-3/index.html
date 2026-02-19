@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Student Record</title>
+<style>
+table,th,td{border:1px solid black;border-collapse:collapse;padding:5px;}
+</style>
+</head>
+<body>
+
+<h2>Student Record</h2>
+
+<form id="studentForm">
+ID:<input type="text" id="sid" required>
+Name:<input type="text" id="sname" required>
+Course:<input type="text" id="scourse" required>
+Marks:<input type="number" id="smarks" required>
+<button>Add</button>
+</form>
+
+<table>
+<thead>
+<tr><th>ID</th><th>Name</th><th>Course</th><th>Marks</th><th>Action</th></tr>
+</thead>
+<tbody id="studentTable"></tbody>
+</table>
+
+<script>
+let students = [
+ {id:"1",name:"Rupesh",course:"CSE",marks:85}
+];
+
+function display(){
+    const table=document.getElementById("studentTable");
+    table.innerHTML="";
+    students.forEach((s,i)=>{
+        table.innerHTML+=`
+        <tr>
+        <td>${s.id}</td>
+        <td>${s.name}</td>
+        <td>${s.course}</td>
+        <td>${s.marks}</td>
+        <td><button onclick="del(${i})">Delete</button></td>
+        </tr>`;
+    });
+}
+
+document.getElementById("studentForm").addEventListener("submit",function(e){
+e.preventDefault();
+
+students.push({
+id:sid.value,
+name:sname.value,
+course:scourse.value,
+marks:smarks.value
+});
+
+display();
+this.reset();
+});
+
+function del(i){
+students.splice(i,1);
+display();
+}
+
+display();
+</script>
+
+</body>
+</html>

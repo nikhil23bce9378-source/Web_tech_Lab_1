@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Inventory System</title>
+<style>
+.low{background-color:#ffcccc;}
+table,th,td{border:1px solid black;border-collapse:collapse;padding:5px;}
+</style>
+</head>
+<body>
+
+<h2>Product Inventory</h2>
+
+<table>
+<thead>
+<tr><th>ID</th><th>Name</th><th>Category</th><th>Price</th><th>Stock</th></tr>
+</thead>
+<tbody id="invTable"></tbody>
+</table>
+
+<p>Total Inventory Value: ₹<span id="total"></span></p>
+
+<script>
+let inventory=[
+{id:"1",name:"Laptop",category:"Electronics",price:50000,stock:5},
+{id:"2",name:"Mouse",category:"Electronics",price:500,stock:2}
+];
+
+function display(){
+let total=0;
+const table=document.getElementById("invTable");
+table.innerHTML="";
+inventory.forEach(p=>{
+total+=p.price*p.stock;
+table.innerHTML+=`
+<tr class="${p.stock<3?'low':''}">
+<td>${p.id}</td>
+<td>${p.name}</td>
+<td>${p.category}</td>
+<td>${p.price}</td>
+<td>${p.stock}</td>
+</tr>`;
+});
+document.getElementById("total").textContent=total;
+}
+
+display();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Employee Management (XML)</title>
+<style>
+table, th, td { border:1px solid black; border-collapse: collapse; padding:5px; }
+.success { color:green; }
+.error { color:red; }
+</style>
+</head>
+<body>
+
+<h2>Employee Management</h2>
+
+<form id="empForm">
+ID: <input type="text" id="eid" required>
+Name: <input type="text" id="ename" required>
+Dept: <input type="text" id="edept" required>
+Salary: <input type="number" id="esalary" required>
+<button type="submit">Add Employee</button>
+</form>
+
+<p id="message"></p>
+
+<table>
+<thead>
+<tr>
+<th>ID</th><th>Name</th><th>Dept</th><th>Salary</th><th>Action</th>
+</tr>
+</thead>
+<tbody id="empTable"></tbody>
+</table>
+
+<!-- XML DATA -->
+<script type="text/xml" id="empXML">
+<employees>
+  <employee>
+    <id>1</id>
+    <name>Nikhil</name>
+    <department>HR</department>
+    <salary>40000</salary>
+  </employee>
+</employees>
+</script>
+
+<script>
+let parser = new DOMParser();
+let xmlDoc;
+
+function loadXML(){
+    try{
+        xmlDoc = parser.parseFromString(
+            document.getElementById("empXML").textContent,
+            "text/xml"
+        );
+
+        if(xmlDoc.getElementsByTagName("parsererror").length > 0){
+            throw "Malformed XML!";
+        }
+
+        displayEmployees();
+    }
+    catch(err){
+        document.getElementById("message").innerHTML =
+            "<span class='error'>" + err + "</span>";
+    }
+}
+
+function displayEmployees(){
+    const table = document.getElementById("empTable");
+    table.innerHTML = "";
+
+    const employees = xmlDoc.getElementsByTagName("employee");
+
+    if(employees.length === 0){
+        table.innerHTML = "<tr><td colspan='5'>No Employees</td></tr>";
+        return;
+    }
+
+    for(let i=0;i<employees.length;i++){
+        const emp = employees[i];
+
+        table.innerHTML += `
+        <tr>
+        <td>${emp.getElementsByTagName("id")[0].textContent}</td>
+        <td>${emp.getElementsByTagName("name")[0].textContent}</td>
+        <td>${emp.getElementsByTagName("department")[0].textContent}</td>
+        <td>${emp.getElementsByTagName("salary")[0].textContent}</td>
+        <td>
+        <button onclick="deleteEmployee(${i})">Delete</button>
+        </td>
+        </tr>`;
+    }
+}
+
+document.getElementById("empForm").addEventListener("submit", function(e){
+    e.preventDefault();
+
+    const employee = xmlDoc.createElement("employee");
+
+    ["eid","ename","edept","esalary"].forEach((id,index)=>{
+        const tag = ["id","name","department","salary"][index];
+        const node = xmlDoc.createElement(tag);
+        node.textContent = document.getElementById(id).value;
+        employee.appendChild(node);
+    });
+
+    xmlDoc.documentElement.appendChild(employee);
+    displayEmployees();
+    this.reset();
+    document.getElementById("message").innerHTML =
+        "<span class='success'>Employee Added</span>";
+});
+
+function deleteEmployee(index){
+    const employees = xmlDoc.getElementsByTagName("employee");
+    xmlDoc.documentElement.removeChild(employees[index]);
+    displayEmployees();
+    document.getElementById("message").innerHTML =
+        "<span class='success'>Employee Deleted</span>";
+}
+
+loadXML();
+</script>
+
+</body>
+</html>

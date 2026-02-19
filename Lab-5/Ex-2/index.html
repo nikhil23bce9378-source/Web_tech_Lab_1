@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Library Tracker</title>
+<style>
+table, th, td { border:1px solid black; border-collapse: collapse; padding:5px; }
+</style>
+</head>
+<body>
+
+<h2>Library Book Tracker</h2>
+
+<form id="bookForm">
+ID: <input type="text" id="bid" required>
+Title: <input type="text" id="btitle" required>
+Author: <input type="text" id="bauthor" required>
+Status:
+<select id="bstatus">
+<option>Available</option>
+<option>Not Available</option>
+</select>
+<button type="submit">Add Book</button>
+</form>
+
+<table>
+<thead>
+<tr><th>ID</th><th>Title</th><th>Author</th><th>Status</th><th>Action</th></tr>
+</thead>
+<tbody id="bookTable"></tbody>
+</table>
+
+<script type="text/xml" id="bookXML">
+<books>
+  <book>
+    <id>1</id>
+    <title>Little Hearts</title>
+    <author>Nikhil</author>
+    <status>Available</status>
+  </book>
+</books>
+</script>
+
+<script>
+let parser = new DOMParser();
+let xmlDoc = parser.parseFromString(
+    document.getElementById("bookXML").textContent,
+    "text/xml"
+);
+
+function displayBooks(){
+    const table = document.getElementById("bookTable");
+    table.innerHTML="";
+    const books = xmlDoc.getElementsByTagName("book");
+
+    for(let i=0;i<books.length;i++){
+        const b = books[i];
+        table.innerHTML += `
+        <tr>
+        <td>${b.getElementsByTagName("id")[0].textContent}</td>
+        <td>${b.getElementsByTagName("title")[0].textContent}</td>
+        <td>${b.getElementsByTagName("author")[0].textContent}</td>
+        <td>${b.getElementsByTagName("status")[0].textContent}</td>
+        <td><button onclick="deleteBook(${i})">Delete</button></td>
+        </tr>`;
+    }
+}
+
+document.getElementById("bookForm").addEventListener("submit", function(e){
+    e.preventDefault();
+
+    const book = xmlDoc.createElement("book");
+    ["bid","btitle","bauthor","bstatus"].forEach((id,index)=>{
+        const tags=["id","title","author","status"];
+        const node = xmlDoc.createElement(tags[index]);
+        node.textContent = document.getElementById(id).value;
+        book.appendChild(node);
+    });
+
+    xmlDoc.documentElement.appendChild(book);
+    displayBooks();
+    this.reset();
+});
+
+function deleteBook(index){
+    xmlDoc.documentElement.removeChild(
+        xmlDoc.getElementsByTagName("book")[index]
+    );
+    displayBooks();
+}
+
+displayBooks();
+</script>
+
+</body>
+</html>
